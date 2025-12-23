@@ -11,22 +11,30 @@ jobs:
     steps:
       - name: 'Checkout codes'
         uses: actions/checkout@v2
+
+      - name: 'Create a dummy file to ensure a change'
+        run: |
+          echo "Keep-alive trigger at $(date)" > keep-alive.txt
       
-      - name: 'Avoid Github Workflow being suspended'
-        run: echo $(cat /proc/sys/kernel/random/uuid) > UUID.txt
-      
-      - name: 'Commit Files'
+      - name: 'Commit and Check for Changes'
         id: commit
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
-          git diff --quiet && git diff --staged --quiet || git commit -am '是否继续白嫖：[是] —— 继续白嫖成功！'
-          echo ::set-output name=status::success
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: Keep Actions alive by schedule"
+            echo "::set-output name=pushed::true"
+          else
+            echo "No changes to commit."
+            echo "::set-output name=pushed::false"
+          fi
            
       - name: 'GitHub Push'
-        if: steps.commit.output.status != 'success'
+        if: steps.commit.outputs.pushed == 'true'
         uses: ad-m/github-push-action@v0.6.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # 使用你新创建的 PAT_TOKEN，而不是 GITHUB_TOKEN
+          github_token: ${{ secrets.PAT_TOKEN }} 
           branch: ${{ github.ref }}
+          force: true
