@@ -3,7 +3,7 @@ name: 'KeepActionAlive'
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 1 * *'
+    - cron: '0 0 1 * *' # 每月1号的零点运行
 
 jobs:
   auto_renew:
@@ -11,22 +11,35 @@ jobs:
     steps:
       - name: 'Checkout codes'
         uses: actions/checkout@v2
+
+      - name: 'Create a dummy file to ensure a change'
+        run: |
+          # 创建一个包含随机内容的文件，确保每次都有变动
+          echo "Keep-alive trigger at $(date)" > keep-alive.txt
       
-      - name: 'Avoid Github Workflow being suspended'
-        run: echo $(cat /proc/sys/kernel/random/uuid) > UUID.txt
-      
-      - name: 'Commit Files'
+      - name: 'Commit and Check for Changes'
         id: commit
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          
+          # 将所有变动添加到暂存区
           git add .
-          git diff --quiet && git diff --staged --quiet || git commit -am '是否继续白嫖：[是] —— 继续白嫖成功！'
-          echo ::set-output name=status::success
+          
+          # 检查是否有变动。如果有，则提交并设置输出变量为 true
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: Keep Actions alive by schedule"
+            echo "::set-output name=pushed::true"
+          else
+            echo "No changes to commit."
+            echo "::set-output name=pushed::false"
+          fi
            
       - name: 'GitHub Push'
-        if: steps.commit.output.status != 'success'
+        # 仅在 commit 步骤真的创建了提交时才运行
+        if: steps.commit.outputs.pushed == 'true'
         uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
+          force: true # <--- 添加此行以强制推送
