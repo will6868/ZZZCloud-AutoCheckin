@@ -3,18 +3,22 @@ name: 'KeepActionAlive'
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 1 * *' 
+    - cron: '0 0 1 * *'
 
 jobs:
   auto_renew:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write   
+      workflows: write  
+      
     steps:
       - name: 'Checkout codes'
         uses: actions/checkout@v2
 
       - name: 'Create a dummy file to ensure a change'
         run: |
-          # 创建一个包含随机内容的文件，确保每次都有变动
           echo "Keep-alive trigger at $(date)" > keep-alive.txt
       
       - name: 'Commit and Check for Changes'
@@ -22,11 +26,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          
-          # 将所有变动添加到暂存区
           git add .
-          
-          # 检查是否有变动。如果有，则提交并设置输出变量为 true
           if ! git diff --staged --quiet; then
             git commit -m "chore: Keep Actions alive by schedule"
             echo "::set-output name=pushed::true"
