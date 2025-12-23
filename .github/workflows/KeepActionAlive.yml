@@ -3,7 +3,7 @@ name: 'KeepActionAlive'
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 1 * *' # 每月1号的零点运行
+    - cron: '0 0 1 * *' 
 
 jobs:
   auto_renew:
@@ -36,10 +36,9 @@ jobs:
           fi
            
       - name: 'GitHub Push'
-        # 仅在 commit 步骤真的创建了提交时才运行
         if: steps.commit.outputs.pushed == 'true'
         uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
-          force: true # <--- 添加此行以强制推送
+          force: true
