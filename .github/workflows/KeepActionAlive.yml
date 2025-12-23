@@ -1,5 +1,5 @@
 name: 'KeepActionAlive'
-#test
+
 on:
   workflow_dispatch:
   schedule:
@@ -8,37 +8,25 @@ on:
 jobs:
   auto_renew:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write   
-      workflows: write  
-      
     steps:
       - name: 'Checkout codes'
         uses: actions/checkout@v2
-
-      - name: 'Create a dummy file to ensure a change'
-        run: |
-          echo "Keep-alive trigger at $(date)" > keep-alive.txt
       
-      - name: 'Commit and Check for Changes'
+      - name: 'Avoid Github Workflow being suspended'
+        run: echo $(cat /proc/sys/kernel/random/uuid) > UUID.txt
+      
+      - name: 'Commit Files'
         id: commit
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
-          if ! git diff --staged --quiet; then
-            git commit -m "chore: Keep Actions alive by schedule"
-            echo "::set-output name=pushed::true"
-          else
-            echo "No changes to commit."
-            echo "::set-output name=pushed::false"
-          fi
+          git diff --quiet && git diff --staged --quiet || git commit -am '是否继续白嫖：[是] —— 继续白嫖成功！'
+          echo ::set-output name=status::success
            
       - name: 'GitHub Push'
-        if: steps.commit.outputs.pushed == 'true'
+        if: steps.commit.output.status != 'success'
         uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
-          force: true
