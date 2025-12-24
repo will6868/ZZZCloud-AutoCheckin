@@ -1,6 +1,5 @@
 # ZZZCloud-AutoCheckin
 
-![ZZZCloud-AutoCheckin](https://socialify.git.ci/GamerNoTitle/ZZZCloud-AutoCheckin/image?forks=1&language=1&name=1&owner=1&stargazers=1&theme=Light)
 
 云·绝区零自动签到脚本
 
@@ -26,18 +25,9 @@
 
 **要是真的不会用就别不好意思开issue问啦，我在Sentry的后台看到了一堆不知道怎么形容的Bug**
 
-## 赞助
-点击下面的Badge其中一个就可以跳转到相应页面，感谢老板的支持！
-
-<a href="https://afdian.net/@GamerNoTitle"><img src="https://img.shields.io/badge/%E7%88%B1%E5%8F%91%E7%94%B5-GamerNoTitle-%238e8cd8?style=for-the-badge" alt="前往爱发电赞助" width=auto height=auto border="0" /></a> <a href="https://cdn.jsdelivr.net/gh/GamerNoTitle/Picture-repo@master/img/Donate/WeChatPay.png"><img src="https://img.shields.io/badge/%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98-GamerNoTitle-%2304BE02?style=for-the-badge" alt="使用微信赞助" width=auto height=auto border="0" /></a> <a href="https://cdn.jsdelivr.net/gh/GamerNoTitle/Picture-repo@master/img/Donate/AliPay.jpg"><img src="https://img.shields.io/badge/%E6%94%AF%E4%BB%98%E5%AE%9D%E6%94%AF%E4%BB%98-GamerNoTitle-%231678FF?style=for-the-badge" alt="使用支付宝赞助" width=auto height=auto border="0" /></a>
-
 ## 免责声明
 
 一旦你fork了本仓库则代表你同意以下内容：
 
 - 所有账号被封禁的情况由使用者自行承担
 - 一切由使用本脚本造成的后果由使用者自行承担
-
-## Stargazers over time
-
-[![Stargazers over time](https://starchart.cc/GamerNoTitle/ZZZCloud-AutoCheckin.svg)](https://starchart.cc/GamerNoTitle/ZZZCloud-AutoCheckin)
